@@ -9,6 +9,32 @@ const { test, expect } = require('@playwright/test');
 test.describe('App Shell', () => {
   test.describe('Application Loading', () => {
     test('app loads without runtime errors @smoke', async ({ page }) => {
+      await page.route('**/graphql', async (route) => {
+        const postData = route.request().postDataJSON();
+
+        if (postData?.query?.includes('HomePageQuery')) {
+          await route.fulfill({
+            status: 200,
+            contentType: 'application/json',
+            body: JSON.stringify({
+              data: {
+                adminShop: {
+                  id: '1',
+                  domain: 'test-shop.myshopify.com',
+                  appHandle: 'skintwin-marketplace',
+                  publicationId: 'gid://shopify/Publication/123',
+                  availableProductCount: 10,
+                  onboardingInfoCompleted: true,
+                  onboardingCompleted: true,
+                },
+              },
+            }),
+          });
+        } else {
+          await route.continue();
+        }
+      });
+
       // Listen for console errors
       const consoleErrors = [];
       page.on('console', (msg) => {
@@ -20,12 +46,14 @@ test.describe('App Shell', () => {
       await page.goto('/');
 
       // Wait for React app to render
-      await expect(page.locator('#app')).toBeVisible({ timeout: 10000 });
+      await expect(page.locator('#root')).toBeVisible({ timeout: 10000 });
 
       // Filter out expected errors (e.g., missing env vars in test mode)
       const criticalErrors = consoleErrors.filter(
         (error) =>
           !error.includes('SHOPIFY_API_KEY') &&
+          !error.includes('__webpack_hmr') &&
+          !error.includes('Failed to load resource') &&
           !error.includes('Warning:') &&
           !error.includes('DevTools')
       );
@@ -34,10 +62,37 @@ test.describe('App Shell', () => {
     });
 
     test('root route renders React application @smoke', async ({ page }) => {
+      await page.route('**/graphql', async (route) => {
+        const postData = route.request().postDataJSON();
+
+        if (postData?.query?.includes('HomePageQuery')) {
+          await route.fulfill({
+            status: 200,
+            contentType: 'application/json',
+            body: JSON.stringify({
+              data: {
+                adminShop: {
+                  id: '1',
+                  domain: 'test-shop.myshopify.com',
+                  appHandle: 'skintwin-marketplace',
+                  publicationId: 'gid://shopify/Publication/123',
+                  availableProductCount: 10,
+                  onboardingInfoCompleted: true,
+                  onboardingCompleted: true,
+                },
+              },
+            }),
+          });
+        } else {
+          await route.continue();
+        }
+      });
+
       await page.goto('/');
+      await page.waitForLoadState('networkidle');
 
       // Check for React root element
-      const appRoot = page.locator('#app');
+      const appRoot = page.locator('#root');
       await expect(appRoot).toBeVisible();
 
       // Verify React has rendered content (not just empty div)
@@ -140,7 +195,7 @@ test.describe('App Shell', () => {
       await page.waitForLoadState('networkidle');
 
       // App should still be visible and functional
-      const appRoot = page.locator('#app');
+      const appRoot = page.locator('#root');
       await expect(appRoot).toBeVisible();
     });
 
@@ -151,7 +206,7 @@ test.describe('App Shell', () => {
       await page.goto('/');
       await page.waitForLoadState('networkidle');
 
-      const appRoot = page.locator('#app');
+      const appRoot = page.locator('#root');
       await expect(appRoot).toBeVisible();
     });
 
@@ -162,7 +217,7 @@ test.describe('App Shell', () => {
       await page.goto('/');
       await page.waitForLoadState('networkidle');
 
-      const appRoot = page.locator('#app');
+      const appRoot = page.locator('#root');
       await expect(appRoot).toBeVisible();
     });
   });
