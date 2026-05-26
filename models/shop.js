@@ -23,6 +23,20 @@ module.exports = (sequelize, DataTypes) => {
       storefrontAccessToken: DataTypes.STRING,
       onboardingInfoCompleted: DataTypes.BOOLEAN,
       termsAccepted: DataTypes.BOOLEAN,
+      // SkinTwin integration fields
+      skintwinSyncStatus: {
+        type: DataTypes.STRING,
+        defaultValue: 'idle',
+      },
+      lastSyncTimestamp: DataTypes.DATE,
+      lastSyncAttempt: DataTypes.DATE,
+      lastSyncResults: DataTypes.TEXT,
+      lastSyncError: DataTypes.TEXT,
+      skintwinEnabled: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false,
+      },
+      skintwinPlatforms: DataTypes.TEXT,
     },
     {
       sequelize,
