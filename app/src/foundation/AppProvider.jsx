@@ -11,14 +11,19 @@ import '@shopify/channels-ui/build/esm/styles.css';
 import RoutePropagator from './RoutePropagator';
 
 const AppProvider = () => {
+  const isLocalhost = window.location.hostname === 'localhost';
+  const host =
+    new URL(location).searchParams.get('host') ||
+    (isLocalhost ? window.btoa('test-shop.myshopify.com/admin') : undefined);
+
   return (
     <ExtendedAppProvider
       polaris={{i18n: polarisTranslations, linkComponent: Link}}
       i18n={translations}
       config={{
-        host: new URL(location).searchParams.get('host'),
-        apiKey: API_KEY,
-        forceRedirect: true,
+        host,
+        apiKey: API_KEY || 'test-api-key',
+        forceRedirect: !isLocalhost,
       }}
     >
       <GraphQLProvider>
