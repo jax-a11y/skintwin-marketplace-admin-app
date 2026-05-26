@@ -5,3 +5,11 @@ dist
 .DS_Store
 .spin
 .vscode
+
+# Playwright
+playwright-report/
+test-results/
+playwright/.cache/
+
+# Coverage
+coverage/

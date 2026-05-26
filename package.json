@@ -8,13 +8,28 @@
     "start": "NODE_ENV=production babel-node server/index.js",
     "dev": "nodemon --exec babel-node server/index.js --watch server/",
     "lint": "eslint  --ext .js,.jsx ./",
-    "test": "NODE_ENV=test jest"
+    "test": "NODE_ENV=test jest",
+    "e2e": "playwright test",
+    "e2e:headed": "playwright test --headed",
+    "e2e:ui": "playwright test --ui",
+    "e2e:debug": "playwright test --debug"
   },
   "engines": {
     "node": "^16.13.1"
   },
   "resolutions": {
     "node-gyp": "9.0.0"
+  },
+  "jest": {
+    "testPathIgnorePatterns": [
+      "/node_modules/",
+      "/e2e/",
+      "/dist/"
+    ],
+    "modulePathIgnorePatterns": [
+      "/e2e/",
+      "/dist/"
+    ]
   },
   "dependencies": {
     "@apollo/client": "^3.5.6",
@@ -58,15 +73,18 @@
   },
   "devDependencies": {
     "@graphql-eslint/eslint-plugin": "^3.8.0",
+    "@playwright/test": "^1.42.0",
     "apollo-server-integration-testing": "^3.0.0",
     "babel-jest": "^27.5.1",
+    "dotenv-cli": "^7.3.0",
     "eslint": "^8.4.1",
     "eslint-plugin-jest": "^26.0.0",
     "eslint-plugin-prettier": "^4.0.0",
     "eslint-plugin-react": "^7.27.1",
     "jest": "^27.4.7",
     "prettier": "^2.5.1",
-    "umzug": "^3.0.0"
+    "umzug": "^3.0.0",
+    "wait-on": "^7.2.0"
   },
   "babel": {
     "presets": [
