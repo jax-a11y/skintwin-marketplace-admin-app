@@ -16,7 +16,8 @@ This is a Node App with Express and React. It is to be used as a starting point 
 - [2. Overview of Code Structure](#2-overview-of-code-structure)
 - [3. How to use this repo](#3-how-to-use-this-repo)
 - [4. Key Tech](#4-key-tech)
-- [5. License](#5-license)
+- [5. CI and E2E implementation plan](#5-ci-and-e2e-implementation-plan)
+- [6. License](#6-license)
 
 ---
 
@@ -131,6 +132,12 @@ We have bundled up the code from our tutorials to help you get started building 
 - [`GraphQL`](https://graphql.org/) and [REST](https://shopify.dev/api/admin-rest)
 - [`Storefront API`](https://shopify.dev/api/storefront)
 
-## 5. License
+## 5. CI and E2E implementation plan
+
+For a detailed rollout plan to implement comprehensive build CI and exhaustive end-to-end testing with GitHub Actions, see:
+
+- [`docs/ci-e2e-implementation-plan.md`](docs/ci-e2e-implementation-plan.md)
+
+## 6. License
 
 This repository is available as open source under the terms of the [MIT License](https://opensource.org/licenses/MIT).
