@@ -10,6 +10,10 @@ import {Redirect} from '@shopify/app-bridge/actions';
 import {authenticatedFetch} from '@shopify/app-bridge-utils';
 
 function userLoggedInFetch(app) {
+  if (window.location.hostname === 'localhost') {
+    return (uri, options) => window.fetch(uri, options);
+  }
+
   const fetchFunction = authenticatedFetch(app);
 
   return async (uri, options) => {
