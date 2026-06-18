@@ -1,7 +1,7 @@
 /**
  * SkinTwin API Client
  * SDK for interacting with the skintwin-integrations unified API gateway
- * 
+ *
  * This client provides methods for:
  * - B2B company management
  * - Cross-platform product sync
@@ -38,7 +38,7 @@ class SkinTwinApiClient {
    * @param {Partial<SkinTwinConfig>} config - Configuration options
    */
   constructor(config = {}) {
-    this.config = { ...DEFAULT_CONFIG, ...config };
+    this.config = {...DEFAULT_CONFIG, ...config};
     this.baseUrl = this.config.baseUrl.replace(/\/$/, '');
   }
 
@@ -51,7 +51,7 @@ class SkinTwinApiClient {
    */
   async request(endpoint, options = {}) {
     const url = `${this.baseUrl}${endpoint}`;
-    
+
     const headers = {
       'Content-Type': 'application/json',
       'X-API-Key': this.config.apiKey,
@@ -70,7 +70,7 @@ class SkinTwinApiClient {
         throw new SkinTwinApiError(
           error.message || `HTTP ${response.status}: ${response.statusText}`,
           response.status,
-          error
+          error,
         );
       }
 
@@ -79,11 +79,9 @@ class SkinTwinApiClient {
       if (error instanceof SkinTwinApiError) {
         throw error;
       }
-      throw new SkinTwinApiError(
-        `Network error: ${error.message}`,
-        0,
-        { originalError: error.message }
-      );
+      throw new SkinTwinApiError(`Network error: ${error.message}`, 0, {
+        originalError: error.message,
+      });
     }
   }
 
@@ -120,7 +118,9 @@ class SkinTwinApiClient {
    */
   async getB2BCompanies(params = {}) {
     const queryString = new URLSearchParams(params).toString();
-    const endpoint = `/api/integrations/b2b/companies${queryString ? `?${queryString}` : ''}`;
+    const endpoint = `/api/integrations/b2b/companies${
+      queryString ? `?${queryString}` : ''
+    }`;
     return this.request(endpoint);
   }
 
@@ -130,7 +130,9 @@ class SkinTwinApiClient {
    * @returns {Promise<Object>} Company details
    */
   async getB2BCompany(companyId) {
-    return this.request(`/api/integrations/b2b/companies/${encodeURIComponent(companyId)}`);
+    return this.request(
+      `/api/integrations/b2b/companies/${encodeURIComponent(companyId)}`,
+    );
   }
 
   // ============================================
@@ -184,7 +186,9 @@ class SkinTwinApiClient {
    * @returns {Promise<Object>} Sync status
    */
   async getSyncStatus(shopDomain) {
-    return this.request(`/api/integrations/sync/status/${encodeURIComponent(shopDomain)}`);
+    return this.request(
+      `/api/integrations/sync/status/${encodeURIComponent(shopDomain)}`,
+    );
   }
 
   // ============================================
@@ -211,7 +215,9 @@ class SkinTwinApiClient {
    * @returns {Promise<Object>} Listing status across platforms
    */
   async getProductListingStatus(productId) {
-    return this.request(`/api/integrations/products/${encodeURIComponent(productId)}/status`);
+    return this.request(
+      `/api/integrations/products/${encodeURIComponent(productId)}/status`,
+    );
   }
 
   // ============================================
@@ -279,5 +285,5 @@ export function createSkinTwinClient(config = {}) {
   return new SkinTwinApiClient(config);
 }
 
-export { SkinTwinApiClient, SkinTwinApiError };
+export {SkinTwinApiClient, SkinTwinApiError};
 export default SkinTwinApiClient;

@@ -110,7 +110,7 @@ export function normalizeAppointment(appointment, platform) {
         endTime: new Date(appointment.end),
         status: mapWixStatus(appointment.status),
         notes: appointment.notes || '',
-        metadata: { wixBookingId: appointment.bookingId },
+        metadata: {wixBookingId: appointment.bookingId},
       };
 
     case 'opencart':
@@ -124,7 +124,7 @@ export function normalizeAppointment(appointment, platform) {
         endTime: new Date(appointment.date_added),
         status: appointment.order_status || 'scheduled',
         notes: appointment.comment || '',
-        metadata: { orderId: appointment.order_id },
+        metadata: {orderId: appointment.order_id},
       };
 
     case 'shopify':
@@ -138,7 +138,7 @@ export function normalizeAppointment(appointment, platform) {
         endTime: new Date(appointment.scheduledAt || appointment.createdAt),
         status: appointment.fulfillmentStatus || 'scheduled',
         notes: appointment.note || '',
-        metadata: { draftOrderId: appointment.id },
+        metadata: {draftOrderId: appointment.id},
       };
 
     default:
@@ -181,7 +181,7 @@ export function normalizeClient(client, platform) {
         phone: client.info?.phones?.[0]?.phone || '',
         address: client.info?.addresses?.[0] || {},
         tags: client.info?.labelKeys || [],
-        metadata: { wixContactId: client.id },
+        metadata: {wixContactId: client.id},
       };
 
     case 'opencart':
@@ -199,7 +199,7 @@ export function normalizeClient(client, platform) {
           country: client.country,
         },
         tags: [],
-        metadata: { customerId: client.customer_id },
+        metadata: {customerId: client.customer_id},
       };
 
     case 'shopify':
@@ -211,7 +211,7 @@ export function normalizeClient(client, platform) {
         phone: client.phone || '',
         address: client.defaultAddress || {},
         tags: client.tags || [],
-        metadata: { shopifyCustomerId: client.id },
+        metadata: {shopifyCustomerId: client.id},
       };
 
     default:
@@ -253,9 +253,9 @@ export function normalizeProduct(product, platform) {
         currency: product.priceData?.currency || 'USD',
         sku: product.sku || '',
         inventory: product.stock?.quantity || 0,
-        images: product.media?.items?.map(m => m.image?.url) || [],
+        images: product.media?.items?.map((m) => m.image?.url) || [],
         variants: product.variants || {},
-        metadata: { wixProductId: product.id },
+        metadata: {wixProductId: product.id},
       };
 
     case 'opencart':
@@ -269,7 +269,7 @@ export function normalizeProduct(product, platform) {
         inventory: parseInt(product.quantity) || 0,
         images: product.images || [],
         variants: product.options || {},
-        metadata: { productId: product.product_id },
+        metadata: {productId: product.product_id},
       };
 
     case 'shopify':
@@ -281,9 +281,9 @@ export function normalizeProduct(product, platform) {
         currency: 'USD',
         sku: product.variants?.edges?.[0]?.node?.sku || '',
         inventory: product.totalInventory || 0,
-        images: product.images?.edges?.map(e => e.node.url) || [],
+        images: product.images?.edges?.map((e) => e.node.url) || [],
         variants: product.variants || {},
-        metadata: { shopifyProductId: product.id },
+        metadata: {shopifyProductId: product.id},
       };
 
     default:
@@ -308,11 +308,11 @@ export function normalizeProduct(product, platform) {
  */
 function mapWixStatus(wixStatus) {
   const statusMap = {
-    'CONFIRMED': 'scheduled',
-    'PENDING': 'scheduled',
-    'CANCELED': 'cancelled',
-    'DECLINED': 'cancelled',
-    'COMPLETED': 'completed',
+    CONFIRMED: 'scheduled',
+    PENDING: 'scheduled',
+    CANCELED: 'cancelled',
+    DECLINED: 'cancelled',
+    COMPLETED: 'completed',
   };
   return statusMap[wixStatus] || 'scheduled';
 }
