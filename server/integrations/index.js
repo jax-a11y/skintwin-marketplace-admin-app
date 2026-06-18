@@ -27,12 +27,12 @@ export {
   SkinTwinApiClient,
   createSkinTwinClient,
   SkinTwinApiError,
-  
+
   // Data Models
   normalizeAppointment,
   normalizeClient,
   normalizeProduct,
-  
+
   // Webhook Handler
   WEBHOOK_EVENTS,
   verifyWebhookSignature,
@@ -46,10 +46,7 @@ export {
  * @param {Object} options - Initialization options
  */
 export function initializeSkinTwinIntegration(app, options = {}) {
-  const {
-    webhookPath = '/webhooks/skintwin',
-    enableWebhooks = true,
-  } = options;
+  const {webhookPath = '/webhooks/skintwin', enableWebhooks = true} = options;
 
   // Register webhook endpoint if enabled
   if (enableWebhooks) {
@@ -59,9 +56,9 @@ export function initializeSkinTwinIntegration(app, options = {}) {
 
   // Create and return a client instance
   const client = createSkinTwinClient();
-  
+
   console.log('[SkinTwin] Integration module initialized');
-  
+
   return client;
 }
 
