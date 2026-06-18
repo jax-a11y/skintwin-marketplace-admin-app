@@ -40,6 +40,29 @@ test.describe('Onboarding', () => {
     });
 
     test('onboarding page shows correct title', async ({ page }) => {
+      await page.route('**/graphql', async (route) => {
+        const postData = route.request().postDataJSON();
+
+        if (postData?.query?.includes('OnboardingPageQuery')) {
+          await route.fulfill({
+            status: 200,
+            contentType: 'application/json',
+            body: JSON.stringify({
+              data: {
+                adminShop: {
+                  id: '1',
+                  onboardingInfoCompleted: true,
+                  termsAccepted: false,
+                  onboardingCompleted: false,
+                },
+              },
+            }),
+          });
+        } else {
+          await route.continue();
+        }
+      });
+
       await page.goto('/onboarding');
       await page.waitForLoadState('networkidle');
 

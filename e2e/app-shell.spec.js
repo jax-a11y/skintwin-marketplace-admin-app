@@ -6,6 +6,35 @@ const { test, expect } = require('@playwright/test');
  * Tests for application loading, navigation, and UI framework integration
  */
 
+const mockHomePageQuery = async (page) => {
+  await page.route('**/graphql', async (route) => {
+    const postData = route.request().postDataJSON();
+
+    if (postData?.query?.includes('HomePageQuery')) {
+      await route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({
+          data: {
+            adminShop: {
+              id: '1',
+              domain: 'test-shop.myshopify.com',
+              appHandle: 'skintwin-marketplace',
+              publicationId: 'gid://shopify/Publication/123',
+              availableProductCount: 10,
+              onboardingInfoCompleted: true,
+              onboardingCompleted: true,
+            },
+          },
+        }),
+      });
+      return;
+    }
+
+    await route.continue();
+  });
+};
+
 test.describe('App Shell', () => {
   test.describe('Application Loading', () => {
     test('app loads without runtime errors @smoke', async ({ page }) => {
@@ -175,6 +204,8 @@ test.describe('App Shell', () => {
 
   test.describe('Error Handling', () => {
     test('error boundary catches rendering errors', async ({ page }) => {
+      await mockHomePageQuery(page);
+
       // Navigate to a potentially error-prone route
       await page.goto('/');
       
@@ -188,6 +219,8 @@ test.describe('App Shell', () => {
 
   test.describe('Responsive Layout', () => {
     test('layout adapts to mobile viewport', async ({ page }) => {
+      await mockHomePageQuery(page);
+
       // Set mobile viewport
       await page.setViewportSize({ width: 375, height: 667 });
 
@@ -200,6 +233,8 @@ test.describe('App Shell', () => {
     });
 
     test('layout adapts to tablet viewport', async ({ page }) => {
+      await mockHomePageQuery(page);
+
       // Set tablet viewport
       await page.setViewportSize({ width: 768, height: 1024 });
 
@@ -211,6 +246,8 @@ test.describe('App Shell', () => {
     });
 
     test('layout adapts to desktop viewport', async ({ page }) => {
+      await mockHomePageQuery(page);
+
       // Set desktop viewport
       await page.setViewportSize({ width: 1440, height: 900 });
 
