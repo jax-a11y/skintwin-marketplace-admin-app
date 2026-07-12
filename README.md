@@ -141,3 +141,8 @@ For a detailed rollout plan to implement comprehensive build CI and exhaustive e
 ## 6. License
 
 This repository is available as open source under the terms of the [MIT License](https://opensource.org/licenses/MIT).
+
+## Ecosystem
+
+This repo is part of the [SkinTwin-AI ecosystem](https://github.com/jax-a11y/skintwin-ecosystem-design) (layer: `commerce-runtime`, role: `marketplace-admin`), providing the marketplace channel's admin GraphQL BFF.
+See [ECOSYSTEM.md](./ECOSYSTEM.md) for its contracts and position in the ecosystem.

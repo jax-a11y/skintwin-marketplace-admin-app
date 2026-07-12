@@ -1,0 +1,25 @@
+{
+  "$schema": "https://raw.githubusercontent.com/jax-a11y/skintwin-ecosystem-design/main/schemas/ecosystem-manifest.schema.json",
+  "manifestVersion": "1.0",
+  "github": "jax-a11y/skintwin-marketplace-admin-app",
+  "layer": "commerce-runtime",
+  "role": "marketplace-admin",
+  "description": "Shopify marketplace channel admin app (Express + Apollo GraphQL BFF + Polaris/Channels UI) managing shops, products, and orders for the marketplace channel.",
+  "designAlias": null,
+  "gatewayPrefix": null,
+  "provides": [
+    "marketplace-admin-graphql"
+  ],
+  "consumes": [],
+  "events": {
+    "publishes": [],
+    "subscribes": []
+  },
+  "ci": {
+    "workflows": [
+      "ci.yml (ESLint, Jest+Codecov, webpack build)"
+    ],
+    "usesReusable": false
+  },
+  "registry": "https://github.com/jax-a11y/skintwin-ecosystem-design/blob/main/registry/ecosystem.json"
+}
