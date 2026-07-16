@@ -55,7 +55,7 @@ export function verifyWebhookSignature(payload, signature, secret) {
 
   return crypto.timingSafeEqual(
     Buffer.from(signature),
-    Buffer.from(expectedSignature)
+    Buffer.from(expectedSignature),
   );
 }
 
@@ -69,7 +69,7 @@ export function verifyWebhookSignature(payload, signature, secret) {
  * @returns {Promise<Object>} Processing result
  */
 export async function processWebhookEvent(event) {
-  const { type, payload, source, timestamp } = event;
+  const {type, payload, source} = event;
 
   console.log(`[SkinTwin Webhook] Processing ${type} from ${source}`);
 
@@ -114,7 +114,7 @@ export async function processWebhookEvent(event) {
 
       default:
         console.warn(`[SkinTwin Webhook] Unknown event type: ${type}`);
-        return { success: true, action: 'ignored', reason: 'unknown_event_type' };
+        return {success: true, action: 'ignored', reason: 'unknown_event_type'};
     }
   } catch (error) {
     console.error(`[SkinTwin Webhook] Error processing ${type}:`, error);
@@ -127,7 +127,7 @@ export async function processWebhookEvent(event) {
 // ============================================
 
 async function handleSyncStarted(payload) {
-  const { shopDomain, platforms } = payload;
+  const {shopDomain} = payload;
 
   await updateShopSyncStatus(shopDomain, {
     skintwinSyncStatus: 'syncing',
@@ -135,11 +135,11 @@ async function handleSyncStarted(payload) {
   });
 
   console.log(`[SkinTwin Webhook] Sync started for ${shopDomain}`);
-  return { success: true, action: 'sync_started' };
+  return {success: true, action: 'sync_started'};
 }
 
 async function handleSyncCompleted(payload) {
-  const { shopDomain, results, syncedAt } = payload;
+  const {shopDomain, results, syncedAt} = payload;
 
   await updateShopSyncStatus(shopDomain, {
     skintwinSyncStatus: 'idle',
@@ -148,11 +148,11 @@ async function handleSyncCompleted(payload) {
   });
 
   console.log(`[SkinTwin Webhook] Sync completed for ${shopDomain}`);
-  return { success: true, action: 'sync_completed', results };
+  return {success: true, action: 'sync_completed', results};
 }
 
 async function handleSyncFailed(payload) {
-  const { shopDomain, error } = payload;
+  const {shopDomain, error} = payload;
 
   await updateShopSyncStatus(shopDomain, {
     skintwinSyncStatus: 'error',
@@ -160,7 +160,7 @@ async function handleSyncFailed(payload) {
   });
 
   console.error(`[SkinTwin Webhook] Sync failed for ${shopDomain}:`, error);
-  return { success: true, action: 'sync_failed', error };
+  return {success: true, action: 'sync_failed', error};
 }
 
 // ============================================
@@ -168,22 +168,24 @@ async function handleSyncFailed(payload) {
 // ============================================
 
 async function handleProductUpdate(payload) {
-  const { product, shopDomain, source } = payload;
+  const {product, source} = payload;
 
-  console.log(`[SkinTwin Webhook] Product ${product.id} updated from ${source}`);
-  
+  console.log(
+    `[SkinTwin Webhook] Product ${product.id} updated from ${source}`,
+  );
+
   // Update local product sync metadata
   // Implementation depends on how products are tracked locally
 
-  return { success: true, action: 'product_updated', productId: product.id };
+  return {success: true, action: 'product_updated', productId: product.id};
 }
 
 async function handleProductDeleted(payload) {
-  const { productId, shopDomain, source } = payload;
+  const {productId, source} = payload;
 
   console.log(`[SkinTwin Webhook] Product ${productId} deleted from ${source}`);
 
-  return { success: true, action: 'product_deleted', productId };
+  return {success: true, action: 'product_deleted', productId};
 }
 
 // ============================================
@@ -191,19 +193,32 @@ async function handleProductDeleted(payload) {
 // ============================================
 
 async function handleAppointmentUpdate(payload) {
-  const { appointment, shopDomain, source } = payload;
+  const {appointment, source} = payload;
 
-  console.log(`[SkinTwin Webhook] Appointment ${appointment.id} updated from ${source}`);
+  console.log(
+    `[SkinTwin Webhook] Appointment ${appointment.id} updated from ${source}`,
+  );
 
-  return { success: true, action: 'appointment_updated', appointmentId: appointment.id };
+  return {
+    success: true,
+    action: 'appointment_updated',
+    appointmentId: appointment.id,
+  };
 }
 
 async function handleAppointmentCancelled(payload) {
-  const { appointmentId, shopDomain, source, reason } = payload;
+  const {appointmentId, source, reason} = payload;
 
-  console.log(`[SkinTwin Webhook] Appointment ${appointmentId} cancelled from ${source}`);
+  console.log(
+    `[SkinTwin Webhook] Appointment ${appointmentId} cancelled from ${source}`,
+  );
 
-  return { success: true, action: 'appointment_cancelled', appointmentId, reason };
+  return {
+    success: true,
+    action: 'appointment_cancelled',
+    appointmentId,
+    reason,
+  };
 }
 
 // ============================================
@@ -211,17 +226,21 @@ async function handleAppointmentCancelled(payload) {
 // ============================================
 
 async function handleClientUpdate(payload) {
-  const { client, shopDomain, source } = payload;
+  const {client, source} = payload;
 
   console.log(`[SkinTwin Webhook] Client ${client.id} updated from ${source}`);
 
-  return { success: true, action: 'client_updated', clientId: client.id };
+  return {success: true, action: 'client_updated', clientId: client.id};
 }
 
 async function handleClientMerged(payload) {
-  const { sourceClientIds, targetClientId, shopDomain } = payload;
+  const {sourceClientIds, targetClientId} = payload;
 
-  console.log(`[SkinTwin Webhook] Clients ${sourceClientIds.join(', ')} merged into ${targetClientId}`);
+  console.log(
+    `[SkinTwin Webhook] Clients ${sourceClientIds.join(
+      ', ',
+    )} merged into ${targetClientId}`,
+  );
 
   return {
     success: true,
@@ -236,17 +255,19 @@ async function handleClientMerged(payload) {
 // ============================================
 
 async function handleB2BCompanyUpdate(payload) {
-  const { company, shopDomain } = payload;
+  const {company} = payload;
 
   console.log(`[SkinTwin Webhook] B2B Company ${company.id} updated`);
 
-  return { success: true, action: 'b2b_company_updated', companyId: company.id };
+  return {success: true, action: 'b2b_company_updated', companyId: company.id};
 }
 
 async function handleB2BOrderCreated(payload) {
-  const { order, company, shopDomain } = payload;
+  const {order, company} = payload;
 
-  console.log(`[SkinTwin Webhook] B2B Order ${order.id} created for company ${company.id}`);
+  console.log(
+    `[SkinTwin Webhook] B2B Order ${order.id} created for company ${company.id}`,
+  );
 
   return {
     success: true,
@@ -268,10 +289,13 @@ async function handleB2BOrderCreated(payload) {
 async function updateShopSyncStatus(shopDomain, updates) {
   try {
     await db.Shop.update(updates, {
-      where: { domain: shopDomain },
+      where: {domain: shopDomain},
     });
   } catch (error) {
-    console.error(`[SkinTwin Webhook] Failed to update shop sync status:`, error);
+    console.error(
+      `[SkinTwin Webhook] Failed to update shop sync status:`,
+      error,
+    );
   }
 }
 
@@ -289,7 +313,7 @@ export async function skintwinWebhookHandler(req, res) {
     const rawBody = JSON.stringify(req.body);
     if (!verifyWebhookSignature(rawBody, signature, webhookSecret)) {
       console.warn('[SkinTwin Webhook] Invalid signature');
-      return res.status(401).json({ error: 'Invalid signature' });
+      return res.status(401).json({error: 'Invalid signature'});
     }
   }
 
@@ -298,7 +322,7 @@ export async function skintwinWebhookHandler(req, res) {
     res.status(200).json(result);
   } catch (error) {
     console.error('[SkinTwin Webhook] Processing error:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    res.status(500).json({error: 'Internal server error'});
   }
 }
 
